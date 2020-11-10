@@ -117,19 +117,19 @@ class Drone:
             if self.state==2:
                 self.land_pub.publish(self.cmd_land)
                 self.state=0  
-            if ctrlx>0.3
+            if ctrlx>0.3:
+                ctrlx=0.3
+            elif ctrlx<-0.3:
+                ctrlx=-0.3
+            
+            if ctrly>0.3:
                 ctrlx=0.3
             elif ctrlx<-0.3
                 ctrlx=-0.3
             
-            if ctrly>0.3
-                ctrlx=0.3
-            elif ctrlx<-0.3
-                ctrlx=-0.3
-            
-            if ctrlyaw>0.5
+            if ctrlyaw>0.5:
                 ctrlyaw=0.5
-            elif ctrlyaw<-0.5
+            elif ctrlyaw<-0.5:
                 ctrlyaw=-0.5 
             self.cmd_v.linear.x=ctrlx
             self.cmd_v.linear.y=ctrly
