@@ -74,7 +74,7 @@ class Drone:
         self.x=odom.pose.pose.position.x
         self.y=odom.pose.pose.position.y
         self.z=odom.pose.pose.position.z
-        euler = tf.transformations.euler_from_quaternion(odom.pose.pose.orientation)
+        euler= tf.transformations.euler_from_quaternion([odom.pose.pose.orientation.x,odom.pose.pose.orientation.y,odom.pose.pose.orientation.z,odom.pose.pose.orientation.w])
         self.roll=euler[0]
         self.pitch=euler[1]
         self.yaw=euler[2]
