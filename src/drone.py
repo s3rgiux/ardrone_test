@@ -78,7 +78,8 @@ class Drone:
         self.roll=euler[0]
         self.pitch=euler[1]
         self.yaw=euler[2]
-        print(self.yaw)
+        rospy.logerr("yaw {}".format(self.yaw))
+        #print(self.yaw)
         if self.autonomous==True:
             if self.state==0:
                 zd=1.0
