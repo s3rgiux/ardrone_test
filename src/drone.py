@@ -124,7 +124,7 @@ class Drone:
             
             if ctrly>0.3:
                 ctrlx=0.3
-            elif ctrlx<-0.3
+            elif ctrlx<-0.3:
                 ctrlx=-0.3
             
             if ctrlyaw>0.5:
