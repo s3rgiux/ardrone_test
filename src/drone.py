@@ -79,6 +79,9 @@ class Drone:
         self.pitch=euler[1]
         self.yaw=euler[2]
         rospy.logerr("yaw {}".format(self.yaw))
+        gainxy=0.7
+        gainz=1.2
+        gainyaw=1.2
         #print(self.yaw)
         if self.autonomous==True:
             if self.state==0:
@@ -88,12 +91,12 @@ class Drone:
                 yd=0.0
                 ez=zd-self.z
                 eyaw=yawd-self.yaw
-                ctrlz=ez*1.2
-                ctrlyaw=eyaw*1.2
+                ctrlz=ez*gainz
+                ctrlyaw=eyaw*gainyaw
                 ex=xd-self.x
                 ey=yd-self.y
-                ctrlx=ex*1.2
-                ctrly=ey*1.2
+                ctrlx=ex*gainxy
+                ctrly=ey*gainxy
                 if eyaw<0.2 and ez < 0.15 and ex<0.2 and ey <0.2:
                     self.state=1
             if self.state==1:
@@ -103,18 +106,31 @@ class Drone:
                 yd=0.0
                 ez=zd-self.z
                 eyaw=yawd-self.yaw
-                ctrlz=ez*1.2
-                ctrlyaw=eyaw*1.2
+                ctrlz=ez*gainz
+                ctrlyaw=eyaw*gainyaw
                 ex=xd-self.x
                 ey=yd-self.y
-                ctrlx=ex*1.2
-                ctrly=ey*1.2
-                if eyaw<0.2 and ez < 0.15 and ex<0.2 and ey <0.2:
+                ctrlx=ex*gainxy
+                ctrly=ey*gainxy
+                if abs(eyaw)<0.2 and abs(ez) < 0.15 and abs(ex)<0.2 and abs(ey) <0.2:
                     self.state=2
             if self.state==2:
                 self.land_pub.publish(self.cmd_land)
                 self.state=0  
-
+            if ctrlx>0.3
+                ctrlx=0.3
+            elif ctrlx<-0.3
+                ctrlx=-0.3
+            
+            if ctrly>0.3
+                ctrlx=0.3
+            elif ctrlx<-0.3
+                ctrlx=-0.3
+            
+            if ctrlyaw>0.5
+                ctrlyaw=0.5
+            elif ctrlyaw<-0.5
+                ctrlyaw=-0.5 
             self.cmd_v.linear.x=ctrlx
             self.cmd_v.linear.y=ctrly
             self.cmd_v.linear.z=ctrlz
