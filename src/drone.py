@@ -13,6 +13,7 @@ from sensor_msgs.msg import Imu, JointState
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 from std_msgs.msg import Float64
+from std_msgs.msg import Empty
 
 
 class Drone: 
@@ -24,11 +25,15 @@ class Drone:
         self.odom_sub = rospy.Subscriber('ardrone/odometry', Odometry, self.callback)
         self.joy_sub = rospy.Subscriber('j0/joy', Joy, self.joy_callback)
         self.move_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.tkof_pub = rospy.Publisher('ardrone/takeoff', Empty, queue_size=1)
+        self.land_pub = rospy.Publisher('ardrone/land', Empty, queue_size=1)
         self.x=0
         self.y=0
         self.z=0
         self.ang= Quaternion()
         self.cmd_v=Twist()
+        self.cmd_tkof=Empty()
+        self.cmd_land=Empty()
         #self.pub = rospy.Publisher('aruco/image', Image, queue_size=1)
 
 
@@ -38,6 +43,12 @@ class Drone:
         yaw = axes[0]
         up = axes[4]
         side= axes[3]
+        tkof=joy.buttons[2]
+        lnd=joy.buttons[0]
+        if tkof==1:
+            self.tkof_pub.publish(self.cmd_tkof)
+        elif lnd==1:
+            self.land_pub.publish(self.cmd_land)
         self.cmd_v.linear.x=forward
         self.cmd_v.linear.y=side
         self.cmd_v.linear.z=up
