@@ -82,6 +82,9 @@ class Drone:
         gainxy=0.7
         gainz=1.2
         gainyaw=1.2
+        saturation=0.05
+        saturation2=0.5
+        saturation3=0.3
         #print(self.yaw)
         if self.autonomous==True:
             if self.state==0:
@@ -115,27 +118,33 @@ class Drone:
                 if abs(eyaw)<0.2 and abs(ez) < 0.15 and abs(ex)<0.2 and abs(ey) <0.2:
                     self.state=2
             if self.state==2:
-                self.land_pub.publish(self.cmd_land)
-                self.state=0  
-            if ctrlx>0.1:
-                ctrlx=0.1
-            elif ctrlx<-0.1:
-                ctrlx=-0.1
+                self.cmd_v.linear.x=0
+                self.cmd_v.linear.y=0
+                self.cmd_v.linear.z=0
+                self.cmd_v.angular.x=0
+                self.cmd_v.angular.y=0
+                self.cmd_v.angular.z=0
+                #self.land_pub.publish(self.cmd_land)
+                #self.state=0  
+            if ctrlx>saturation:
+                ctrlx=saturation
+            elif ctrlx<-saturation:
+                ctrlx=-saturation
             
-            if ctrly>0.1:
-                ctrlx=0.1
-            elif ctrlx<-0.1:
-                ctrlx=-0.1
+            if ctrly>saturation:
+                ctrlx=saturation
+            elif ctrlx<-saturation:
+                ctrlx=-saturation
 
-            if ctrlz>0.5:
-                ctrlz=0.5
-            elif ctrlz<-0.5:
-                ctrlz=-0.5
+            if ctrlz>saturation2:
+                ctrlz=saturation2
+            elif ctrlz<-saturation2:
+                ctrlz=-saturation2
             
-            if ctrlyaw>0.4:
-                ctrlyaw=0.4
-            elif ctrlyaw<-0.4:
-                ctrlyaw=-0.4
+            if ctrlyaw>saturation3:
+                ctrlyaw=saturation3
+            elif ctrlyaw<-saturation:
+                ctrlyaw=-saturation
             self.cmd_v.linear.x=ctrlx
             self.cmd_v.linear.y=ctrly
             self.cmd_v.linear.z=ctrlz
