@@ -132,9 +132,9 @@ class Drone:
                 ctrlx=-saturation
             
             if ctrly>saturation:
-                ctrlx=saturation
-            elif ctrlx<-saturation:
-                ctrlx=-saturation
+                ctrly=saturation
+            elif ctrly<-saturation:
+                ctrly=-saturation
 
             if ctrlz>saturation2:
                 ctrlz=saturation2
@@ -143,8 +143,8 @@ class Drone:
             
             if ctrlyaw>saturation3:
                 ctrlyaw=saturation3
-            elif ctrlyaw<-saturation:
-                ctrlyaw=-saturation
+            elif ctrlyaw<-saturation3:
+                ctrlyaw=-saturation3
             self.cmd_v.linear.x=ctrlx
             self.cmd_v.linear.y=ctrly
             self.cmd_v.linear.z=ctrlz
