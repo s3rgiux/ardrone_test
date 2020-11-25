@@ -16,6 +16,7 @@ from std_msgs.msg import String
 from std_msgs.msg import Float64
 from std_msgs.msg import Empty
 
+cont=0
 
 class Drone: 
     
@@ -79,12 +80,12 @@ class Drone:
         self.pitch=euler[1]
         self.yaw=euler[2]
         rospy.logerr("yaw {}".format(self.yaw))
-        gainxy=0.7
+        gainxy=0.8
         gainz=1.2
-        gainyaw=1.2
+        gainyaw=0.8
         saturation=0.05
         saturation2=0.5
-        saturation3=0.3
+        saturation3=0.8
         #print(self.yaw)
         if self.autonomous==True:
             if self.state==0:
@@ -118,12 +119,29 @@ class Drone:
                 if abs(eyaw)<0.2 and abs(ez) < 0.15 and abs(ex)<0.2 and abs(ey) <0.2:
                     self.state=2
             if self.state==2:
-                self.cmd_v.linear.x=0
-                self.cmd_v.linear.y=0
-                self.cmd_v.linear.z=0
-                self.cmd_v.angular.x=0
-                self.cmd_v.angular.y=0
-                self.cmd_v.angular.z=0
+                cont=cont+1
+                if(cont>100):
+                    self.land_pub.publish(self.cmd_land)
+                    cont=0
+                    self.state=3
+            if self.state==3:
+                cont=cont+1
+                if(cont>900):
+                    self.land_pub.publish(self.cmd_tkof)
+                    cont=0
+                    self.state=4 
+            if self.state==4:
+                cont=cont+1
+                if(cont>900):
+                    self.land_pub.publish(self.cmd_land)
+                    cont=0
+                    self.state=5                  
+                #self.cmd_v.linear.x=0
+                #self.cmd_v.linear.y=0
+                #self.cmd_v.linear.z=0
+                #self.cmd_v.angular.x=0
+                #self.cmd_v.angular.y=0
+                #self.cmd_v.angular.z=0
                 #self.land_pub.publish(self.cmd_land)
                 #self.state=0  
             if ctrlx>saturation:
@@ -145,11 +163,12 @@ class Drone:
                 ctrlyaw=saturation3
             elif ctrlyaw<-saturation3:
                 ctrlyaw=-saturation3
-            self.cmd_v.linear.x=ctrlx
-            self.cmd_v.linear.y=ctrly
-            self.cmd_v.linear.z=ctrlz
-            self.cmd_v.angular.z=ctrlyaw
-            self.move_pub.publish(self.cmd_v)
+            if self.state < 2:
+                self.cmd_v.linear.x=ctrlx
+                self.cmd_v.linear.y=ctrly
+                self.cmd_v.linear.z=ctrlz
+                self.cmd_v.angular.z=ctrlyaw
+                self.move_pub.publish(self.cmd_v)
         #self.yaw=odom.pose.pose.orientation
 
     def on_shutdown(self):
