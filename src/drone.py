@@ -117,7 +117,14 @@ class Drone:
                 ctrlx=ex*gainxy
                 ctrly=ey*gainxy
                 if abs(eyaw)<0.2 and abs(ez) < 0.15 and abs(ex)<0.2 and abs(ey) <0.2:
+                    self.cmd_v.linear.x=0
+                    self.cmd_v.linear.y=0
+                    self.cmd_v.linear.z=0
+                    self.cmd_v.angular.x=0
+                    self.cmd_v.angular.y=0
+                    self.cmd_v.angular.z=0
                     self.state=2
+                    self.move_pub.publish(self.cmd_v)
             if self.state==2:
                 cont=cont+1
                 if(cont>100):
